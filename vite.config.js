@@ -4,6 +4,7 @@ import { bunny } from 'laravel-vite-plugin/fonts';
 import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import inertia from '@inertiajs/vite';
+import path from 'path';
 
 export default defineConfig({
     plugins: [
@@ -20,6 +21,11 @@ export default defineConfig({
         vue(),
         inertia(),
     ],
+    resolve: {
+        alias: {
+            'tightenco-ziggy': path.resolve('vendor/tightenco/ziggy'),
+        },
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],
