@@ -11,15 +11,22 @@ use Inertia\Inertia;
 class ProductController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         $products = Product::select(['id', 'name', 'slug', 'image', 'price', 'discount_price', 'rating', 'is_discount', 'brand_id'])
-        ->with('brand:id,name') 
-        ->latest('id')
-        ->get();
+            ->with('brand:id,name')
+            ->when($request->search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })
+            ->latest('id')
+            ->paginate(9)
+            ->withQueryString();
+
+
         return Inertia("product/Products", [
             'message' => "This is products page",
-            'products' => ProductResource::collection($products)
+            'products' => ProductResource::collection($products),
+            'filters' => $request->only(['search'])
         ]);
     }
 
