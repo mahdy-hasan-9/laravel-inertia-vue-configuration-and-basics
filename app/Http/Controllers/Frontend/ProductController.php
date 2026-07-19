@@ -13,7 +13,10 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::with('brand')->latest()->get() ; 
+        $products = Product::select(['id', 'name', 'slug', 'image', 'price', 'discount_price', 'rating', 'is_discount', 'brand_id'])
+        ->with('brand:id,name') 
+        ->latest('id')
+        ->get();
         return Inertia("product/Products", [
             'message' => "This is products page",
             'products' => ProductResource::collection($products)
