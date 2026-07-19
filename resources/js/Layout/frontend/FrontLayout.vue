@@ -15,7 +15,7 @@ const isActive = (item) => {
     if (route().current(item.routeName) || route().current(item.routeName + '.*')) {
         return true
     }
-    const currentPath = page.url.split('?')[0] 
+    const currentPath = page.url.split('?')[0]
     const itemPath = new URL(item.href, window.location.origin).pathname
     if (itemPath === '/') {
         return currentPath === '/'
@@ -57,10 +57,25 @@ const isActive = (item) => {
                         </button>
                         <Link :href="route('add.product')" class="hover:cursor-pointer">
                             <button
-                                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all">
+                                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 hover:cursor-pointer rounded-lg text-sm font-medium shadow-sm transition-all">
                                 profile
                             </button>
                         </Link>
+
+                        <Link :href="route('login')" class="hover:cursor-pointer">
+                            <button
+                                class="border border-indigo-900 text-indigo-900 hover:cursor-pointer px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all">
+                                Login
+                            </button>
+                        </Link>
+
+                        <Link :href="route('register')" class="hover:cursor-pointer">
+                            <button
+                                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 hover:cursor-pointer rounded-lg text-sm font-medium shadow-sm transition-all">
+                                Register
+                            </button>
+                        </Link>
+
                     </div>
 
                     <!-- Mobile Menu Button -->

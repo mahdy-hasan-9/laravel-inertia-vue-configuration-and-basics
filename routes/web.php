@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Frontend\AboutController;
+use App\Http\Controllers\Frontend\AuthenticationController;
 use App\Http\Controllers\Frontend\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -11,12 +13,11 @@ Route::get('/home', function () {
 })->name('home');
 
 
-Route::get('/about', function () {
-    return Inertia("About", [
-        'message' => "This is about page"
-    ]);
-})->name('about');
+Route::get('/about', AboutController::class)->name('about');
 
+
+Route::get('/register', [AuthenticationController::class,'register'])->name('register');
+Route::get('/login', [AuthenticationController::class,'login'])->name('login');
 
 Route::resource('products', ProductController::class);
 
