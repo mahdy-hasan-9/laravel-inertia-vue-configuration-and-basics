@@ -6,11 +6,18 @@ import FrontLayout from './Layout/frontend/FrontLayout.vue';
 
 createInertiaApp({
     resolve: name => {
+
         const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
         let page = pages[`./Pages/${name}.vue`]
         if (!page) {
+            const match = Object.keys(pages).find(path => path.endsWith(`${name}.vue`))
+            if (match) {
+                page = pages[match]
+            }
+        }
+        if (!page) {
             throw new Error(`Page ./Pages/${name}.vue not found.`)
-        }        
+        }
         page.default.layout = page.default.layout === undefined ? FrontLayout : page.default.layout
         return page
     },

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Frontend\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -17,21 +18,17 @@ Route::get('/about', function () {
 })->name('about');
 
 
-Route::get('products', function () {
-    return Inertia("Products", [
-        'message' => "This is books page"
-    ]);
-})->name('products');
+Route::resource('products', ProductController::class);
 
 
 Route::get('add/product', function () {
-    return Inertia("AddProduct", [
+    return Inertia("product/AddProduct", [
         'message' => "This is Add Product page"
     ]);
 })->name('add.product');
 
 Route::get('edit/product/:id', function () {
-    return Inertia("EditProduct", [
+    return Inertia("product/EditProduct", [
         'message' => "This is Edit Product page"
     ]);
 })->name('product');

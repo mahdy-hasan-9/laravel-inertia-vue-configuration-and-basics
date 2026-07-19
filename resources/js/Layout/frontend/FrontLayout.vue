@@ -5,14 +5,25 @@ import { Link, usePage } from '@inertiajs/vue3'
 const page = usePage()
 const isMobileMenuOpen = ref(false)
 
+
 const menuItems = ref([
-    { name: 'Home', href: route('home'), component: 'Home' },
-    { name: 'Products', href: route('products'), component: 'Products' },
+    { name: 'Home', href: route('home'), routeName: 'home' },
+    { name: 'Products', href: route('products.index'), routeName: 'products.index' },
 ])
 
-const isActive = (componentName) => {
-    return page.component === componentName || page.component.startsWith(componentName + '/')
+const isActive = (item) => {
+    if (route().current(item.routeName) || route().current(item.routeName + '.*')) {
+        return true
+    }
+    const currentPath = page.url.split('?')[0] 
+    const itemPath = new URL(item.href, window.location.origin).pathname
+    if (itemPath === '/') {
+        return currentPath === '/'
+    }
+    return currentPath.startsWith(itemPath)
 }
+
+
 </script>
 
 <template>
@@ -22,13 +33,15 @@ const isActive = (componentName) => {
                 <div class="flex justify-between h-16 items-center">
                     <!-- Logo -->
                     <div class="flex-shrink-0 flex items-center gap-2">
-                        <span class="text-2xl font-bold text-indigo-600 tracking-tight">DevApp</span>
+                        <span class="text-2xl font-bold text-indigo-600 tracking-tight">
+                            Logo
+                        </span>
                     </div>
 
                     <!-- Desktop Navigation Menu -->
                     <nav class="hidden md:flex space-x-8">
                         <Link v-for="item in menuItems" :key="item.name" :href="item.href" :class="[
-                            isActive(item.component)
+                            isActive(item)
                                 ? 'border-indigo-500 text-gray-900'
                                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
                             'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200'
@@ -40,12 +53,12 @@ const isActive = (componentName) => {
                     <!-- Right Side Actions (User Profile / CTA) -->
                     <div class="hidden md:flex items-center gap-4">
                         <button class="text-sm font-medium text-gray-500 hover:text-gray-700 hover:cursor-pointer">
-                            cart 
+                            cart
                         </button>
                         <Link :href="route('add.product')" class="hover:cursor-pointer">
                             <button
                                 class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all">
-                                profile 
+                                profile
                             </button>
                         </Link>
                     </div>
@@ -75,7 +88,7 @@ const isActive = (componentName) => {
             <div v-show="isMobileMenuOpen" class="md:hidden border-b border-gray-200 bg-white">
                 <div class="pt-2 pb-3 space-y-1 px-4">
                     <Link v-for="item in menuItems" :key="item.name" :href="item.href" :class="[
-                        isActive(item.component)
+                        isActive(item)
                             ? 'bg-indigo-50 border-indigo-500 text-indigo-700'
                             : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700',
                         'block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-all'
