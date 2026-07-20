@@ -23,7 +23,6 @@ const isActive = (item) => {
     return currentPath.startsWith(itemPath)
 }
 
-
 </script>
 
 <template>
@@ -60,6 +59,14 @@ const isActive = (item) => {
                                 class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 hover:cursor-pointer rounded-lg text-sm font-medium shadow-sm transition-all">
                                 profile
                             </button>
+                        </Link>
+                        <Link 
+                            method="post" 
+                            as="button"
+                            :href="route('logout')" 
+                            class="border border-indigo-900 text-indigo-900 hover:cursor-pointer px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all"
+                        >
+                            Logout 
                         </Link>
 
                         <Link :href="route('login')" class="hover:cursor-pointer">

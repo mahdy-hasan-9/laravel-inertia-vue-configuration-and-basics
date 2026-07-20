@@ -17,7 +17,12 @@ Route::get('/about', AboutController::class)->name('about');
 
 
 Route::get('/register', [AuthenticationController::class,'register'])->name('register');
+Route::post('/register', [AuthenticationController::class,'registerStore'])->name('register.store');
+
 Route::get('/login', [AuthenticationController::class,'login'])->name('login');
+Route::post('/login', [AuthenticationController::class,'loginStore'])->name('login.store');
+
+Route::post('/logout', [AuthenticationController::class,'logout'])->name('logout');
 
 Route::resource('products', ProductController::class);
 
