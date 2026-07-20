@@ -6,35 +6,27 @@ use App\Http\Controllers\Frontend\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/about', AboutController::class)->name('about');
+    Route::get('add/product', function () {
+        return Inertia("product/AddProduct", [
+            'message' => "This is Add Product page"
+        ]);
+    })->name('add.product');
+    Route::post('/logout', [AuthenticationController::class, 'logout'])->name('logout');
+});
+
 Route::get('/home', function () {
     return Inertia("Home", [
         'message' => "Hello Inertia Vue"
     ]);
 })->name('home');
+ Route::resource('products', ProductController::class);
 
-
-Route::get('/about', AboutController::class)->name('about');
-
-
-Route::get('/register', [AuthenticationController::class,'register'])->name('register');
-Route::post('/register', [AuthenticationController::class,'registerStore'])->name('register.store');
-
-Route::get('/login', [AuthenticationController::class,'login'])->name('login');
-Route::post('/login', [AuthenticationController::class,'loginStore'])->name('login.store');
-
-Route::post('/logout', [AuthenticationController::class,'logout'])->name('logout');
-
-Route::resource('products', ProductController::class);
-
-
-Route::get('add/product', function () {
-    return Inertia("product/AddProduct", [
-        'message' => "This is Add Product page"
-    ]);
-})->name('add.product');
-
-Route::get('edit/product/:id', function () {
-    return Inertia("product/EditProduct", [
-        'message' => "This is Edit Product page"
-    ]);
-})->name('product');
+Route::middleware(['guest'])->group(function () {
+    Route::get('/register', [AuthenticationController::class, 'register'])->name('register');
+    Route::post('/register', [AuthenticationController::class, 'registerStore'])->name('register.store');
+    Route::get('/login', [AuthenticationController::class, 'login'])->name('login');
+    Route::post('/login', [AuthenticationController::class, 'loginStore'])->name('login.store');
+});

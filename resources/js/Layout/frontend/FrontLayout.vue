@@ -1,13 +1,21 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 
 const page = usePage()
 const isMobileMenuOpen = ref(false)
 
 
+const user = computed(() => page.props.auth.user)
+
+
+console.log(user.value);
+
+
+
 const menuItems = ref([
     { name: 'Home', href: route('home'), routeName: 'home' },
+    { name: 'About', href: route('about'), routeName: 'about' },
     { name: 'Products', href: route('products.index'), routeName: 'products.index' },
 ])
 
@@ -54,35 +62,34 @@ const isActive = (item) => {
                         <button class="text-sm font-medium text-gray-500 hover:text-gray-700 hover:cursor-pointer">
                             cart
                         </button>
-                        <Link :href="route('add.product')" class="hover:cursor-pointer">
-                            <button
-                                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 hover:cursor-pointer rounded-lg text-sm font-medium shadow-sm transition-all">
-                                profile
-                            </button>
-                        </Link>
-                        <Link 
-                            method="post" 
-                            as="button"
-                            :href="route('logout')" 
-                            class="border border-indigo-900 text-indigo-900 hover:cursor-pointer px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all"
-                        >
-                            Logout 
-                        </Link>
 
-                        <Link :href="route('login')" class="hover:cursor-pointer">
-                            <button
+                        <template v-if="user">
+                            <Link :href="route('add.product')" class="hover:cursor-pointer">
+                                <button
+                                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 hover:cursor-pointer rounded-lg text-sm font-medium shadow-sm transition-all">
+                                    profile
+                                </button>
+                            </Link>
+                            <Link method="post" as="button" :href="route('logout')"
                                 class="border border-indigo-900 text-indigo-900 hover:cursor-pointer px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all">
-                                Login
-                            </button>
-                        </Link>
+                                Logout
+                            </Link>
+                        </template>
+                        <template v-else>
+                            <Link :href="route('login')" class="hover:cursor-pointer">
+                                <button
+                                    class="border border-indigo-900 text-indigo-900 hover:cursor-pointer px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all">
+                                    Login
+                                </button>
+                            </Link>
 
-                        <Link :href="route('register')" class="hover:cursor-pointer">
-                            <button
-                                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 hover:cursor-pointer rounded-lg text-sm font-medium shadow-sm transition-all">
-                                Register
-                            </button>
-                        </Link>
-
+                            <Link :href="route('register')" class="hover:cursor-pointer">
+                                <button
+                                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 hover:cursor-pointer rounded-lg text-sm font-medium shadow-sm transition-all">
+                                    Register
+                                </button>
+                            </Link>
+                        </template>
                     </div>
 
                     <!-- Mobile Menu Button -->
