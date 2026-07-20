@@ -3,12 +3,15 @@
 use App\Http\Controllers\Frontend\AboutController;
 use App\Http\Controllers\Frontend\AuthenticationController;
 use App\Http\Controllers\Frontend\ProductController;
+use App\Http\Controllers\Frontend\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/about', AboutController::class)->name('about');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profle', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('add/product', function () {
         return Inertia("product/AddProduct", [
             'message' => "This is Add Product page"
@@ -22,7 +25,7 @@ Route::get('/home', function () {
         'message' => "Hello Inertia Vue"
     ]);
 })->name('home');
- Route::resource('products', ProductController::class);
+Route::resource('products', ProductController::class);
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/register', [AuthenticationController::class, 'register'])->name('register');

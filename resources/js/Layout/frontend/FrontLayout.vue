@@ -64,7 +64,7 @@ const isActive = (item) => {
                         </button>
 
                         <template v-if="user">
-                            <Link :href="route('add.product')" class="hover:cursor-pointer">
+                            <Link :href="route('profile')" class="hover:cursor-pointer">
                                 <button
                                     class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 hover:cursor-pointer rounded-lg text-sm font-medium shadow-sm transition-all">
                                     profile

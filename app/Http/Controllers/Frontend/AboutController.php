@@ -9,7 +9,7 @@ class AboutController extends Controller
 {
     public function __invoke()
     {
-        return inertia("About", [
+        return inertia("frontend/About", [
             'message' => "This is about page"
         ]);
     }

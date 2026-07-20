@@ -1,7 +1,7 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3';
-import FrontLayout from '../Layout/frontend/FrontLayout.vue';
-import SmoothFade from '../components/mixed/SmoothFade.vue';
+import FrontLayout from '../../Layout/frontend/FrontLayout.vue';
+import SmoothFade from '../../components/mixed/SmoothFade.vue';
 
 defineProps({
     message: String

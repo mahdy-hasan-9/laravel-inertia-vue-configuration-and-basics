@@ -1,5 +1,5 @@
 <script setup>
-import FrontLayout from '../Layout/frontend/FrontLayout.vue';
+import FrontLayout from '../../Layout/frontend/FrontLayout.vue';
 
 defineProps({
     message: String
