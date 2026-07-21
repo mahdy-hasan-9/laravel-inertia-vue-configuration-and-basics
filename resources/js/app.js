@@ -3,6 +3,8 @@ import { createInertiaApp } from '@inertiajs/vue3'
 import { ZiggyVue } from 'tightenco-ziggy';
 import DefaultLayout from './Layout/default/DefaultLayout.vue';
 import FrontLayout from './Layout/frontend/FrontLayout.vue';
+import 'vue3-toastify/dist/index.css';
+
 
 createInertiaApp({
     resolve: name => {

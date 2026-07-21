@@ -25,8 +25,12 @@ return new class extends Migration
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
 
 
+            $table->unsignedBigInteger('sub_category_id');
+            $table->foreign('sub_category_id')->references('id')->on('sub_categories')->onDelete('cascade');
+
+
             $table->string('name');
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->integer('rating')->default(0);
@@ -37,6 +41,13 @@ return new class extends Migration
             $table->tinyInteger('is_toprated')->default(0);
             $table->tinyInteger('is_discount')->default(0);
             $table->timestamps();
+
+            $table->index(['is_active', 'id']);
+            $table->index(['vendor_id', 'is_active']);
+            $table->index(['category_id', 'is_active']);
+            $table->index(['brand_id', 'is_active']);
+
+            $table->fullText('name');
         });
     }
 

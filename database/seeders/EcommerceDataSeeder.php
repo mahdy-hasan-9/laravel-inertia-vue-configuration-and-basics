@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -12,7 +11,7 @@ class EcommerceDataSeeder extends Seeder
 {
     public function run(): void
     {
-        // Disable foreign keys to avoid truncation errors
+        // Foreign key constraints ট্রাঙ্কেট সেফটির জন্য বন্ধ রাখা
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('users')->truncate();
         DB::table('vendors')->truncate();
@@ -26,7 +25,7 @@ class EcommerceDataSeeder extends Seeder
 
         $passwordHash = Hash::make('password');
 
-        // 1. Seed Users (Using 'role' column as defined in migration)
+        // ১. Seed Users
         $usersData = [
             ['name' => 'admin', 'email' => 'admin@gmail.com', 'password' => $passwordHash, 'role' => 'super-admin'],
             ['name' => 'ajax', 'email' => 'ajax@gmail.com', 'password' => $passwordHash, 'role' => 'admin'],
@@ -52,11 +51,10 @@ class EcommerceDataSeeder extends Seeder
 
         DB::table('users')->insert($usersData);
 
-        // Fetch user IDs based on corrected 'role' column
         $vendorUserIds = DB::table('users')->where('role', 'vendor')->pluck('id')->toArray();
         $regularUserIds = DB::table('users')->where('role', 'user')->pluck('id')->toArray();
 
-        // 2. Seed Vendors Profiles
+        // ২. Seed Vendors Profiles
         $vendorsData = [];
         foreach ($vendorUserIds as $index => $userId) {
             $num = $index + 1;
@@ -74,7 +72,7 @@ class EcommerceDataSeeder extends Seeder
         DB::table('vendors')->insert($vendorsData);
         $vendorIds = DB::table('vendors')->pluck('id')->toArray();
 
-        // 3. Seed Brands
+        // ৩. Seed Brands
         $brandMapping = [
             'PC' => ['Asus', 'Mac', 'HP', 'Dell', 'Lenovo'],
             'Mobile' => ['iPhone', 'Samsung', 'Oppo', 'Xiaomi', 'Vivo']
@@ -98,7 +96,7 @@ class EcommerceDataSeeder extends Seeder
         DB::table('brands')->insert($brandsData);
         $allBrands = DB::table('brands')->get();
 
-        // 4. Seed Categories
+        // ৪. Seed Categories
         $categoriesData = [];
         foreach ($allBrands as $brand) {
             $catName = in_array($brand->name, ['Asus', 'Mac', 'HP', 'Dell', 'Lenovo']) ? 'Laptops & PC' : 'Smartphones';
@@ -115,29 +113,34 @@ class EcommerceDataSeeder extends Seeder
         DB::table('categories')->insert($categoriesData);
         $allCategories = DB::table('categories')->get();
 
-        // 5. Seed Sub-Categories
+        // ৫. Seed Sub-Categories (প্রত্যেক ক্যাটাগরির অধীনে সঠিক রিলেশন রক্ষা করা)
         $subCategoriesData = [];
         $subCatNames = ['Gaming', 'Accessories', 'Flagship', 'Budget', 'Premium', 'Refurbished', 'Business', 'Student', 'Slim', 'Pro', 'Ultra', 'Mini'];
 
-        for ($i = 0; $i < 12; $i++) {
-            $matchedCategory = $allCategories[$i % $allCategories->count()];
-
-            $subCategoriesData[] = [
-                'brand_id' => $matchedCategory->brand_id,
-                'category_id' => $matchedCategory->id,
-                'name' => $subCatNames[$i],
-                'slug' => Str::slug($matchedCategory->name . '-' . $subCatNames[$i]),
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+        foreach ($allCategories as $category) {
+            // প্রতি Category-তে ৩টি করে Random Sub-Category দেওয়া
+            $randomSubCats = array_rand(array_flip($subCatNames), 3);
+            foreach ($randomSubCats as $subName) {
+                $subCategoriesData[] = [
+                    'brand_id' => $category->brand_id,
+                    'category_id' => $category->id,
+                    'name' => $subName,
+                    'slug' => Str::slug($category->name . '-' . $subName . '-' . Str::random(4)),
+                    'is_active' => 1,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
         }
         DB::table('sub_categories')->insert($subCategoriesData);
+        $allSubCategories = DB::table('sub_categories')->get();
 
-        // 6. Seed Products
+        // ৬. Seed Products (সঠিক sub_category_id সহ)
         $productsData = [];
         for ($i = 1; $i <= 85; $i++) {
-            $randomCategory = $allCategories->random();
+            // ১. একটি র্যান্ডম SubCategory পিক করা (যার সাথে Category এবং Brand পেয়ার করা আছে)
+            $randomSubCategory = $allSubCategories->random();
+            $randomCategory = $allCategories->where('id', $randomSubCategory->category_id)->first();
             $randomBrand = $allBrands->where('id', $randomCategory->brand_id)->first();
 
             $price = rand(500, 2500);
@@ -149,6 +152,7 @@ class EcommerceDataSeeder extends Seeder
                 'vendor_id' => $randomBrand->vendor_id,
                 'brand_id' => $randomBrand->id,
                 'category_id' => $randomCategory->id,
+                'sub_category_id' => $randomSubCategory->id, // <--- Added sub_category_id
                 'name' => "Product Premium Model {$i}",
                 'slug' => Str::slug("Product Premium Model {$i}-" . Str::random(5)),
                 'description' => "This is high quality optimized standard product description text for product model number {$i}.",
@@ -164,9 +168,13 @@ class EcommerceDataSeeder extends Seeder
                 'updated_at' => now(),
             ];
         }
-        DB::table('products')->insert($productsData);
 
-        // 7. Seed Comments
+        // Memory safety-র জন্য Chunk Insert
+        foreach (array_chunk($productsData, 100) as $chunk) {
+            DB::table('products')->insert($chunk);
+        }
+
+        // ৭. Seed Comments
         $commentsData = [];
         $sampleComments = [
             'Awesome product, highly recommended!',
@@ -191,12 +199,11 @@ class EcommerceDataSeeder extends Seeder
             }
         }
 
-        // Chunk inserts to optimize performance and memory safety
         foreach (array_chunk($commentsData, 500) as $chunk) {
             DB::table('comments')->insert($chunk);
         }
 
-        // 8. Seed Orders (Make sure orders table migration uses 'status' or matching column name)
+        // ৮. Seed Orders
         $ordersData = [];
         $orderStatuses = ['pending', 'delivery', 'done'];
 
@@ -212,7 +219,6 @@ class EcommerceDataSeeder extends Seeder
                 'quantity' => $qty,
                 'amount' => $unitPrice * $qty,
                 'is_paid' => rand(0, 1),
-                // Note: If you changed orders migration column name to 'status', change this key to 'status'
                 'status' => $orderStatuses[array_rand($orderStatuses)],
                 'created_at' => now(),
                 'updated_at' => now(),

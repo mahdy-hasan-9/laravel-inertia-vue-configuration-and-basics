@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +25,7 @@ class ProfileController extends Controller
         $user = $request->user();
         $user->name = $request->name;
         if ($request->filled('password')) {
-            $user->password = bcrypt($request->password);
+            $user->password = Hash::make($request->password);
         }
         if ($request->boolean('remove_avatar')) {
             if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {

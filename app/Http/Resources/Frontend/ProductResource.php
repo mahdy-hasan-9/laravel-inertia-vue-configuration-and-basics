@@ -23,7 +23,9 @@ class ProductResource extends JsonResource
             'discount_price' => $this->discount_price,
             'rating' => $this->rating,
             'is_discount' => $this->is_discount,
-            'brand_name' => $this->brand?->name ?? 'N/A', 
+            'brand_name' => $this->brand?->name ?? 'N/A',
+            'category_name' => $this->category?->name ?? 'N/A',
+            'sub_category_name' => $this->subCategory?->name ?? 'N/A',
         ];
     }
 }

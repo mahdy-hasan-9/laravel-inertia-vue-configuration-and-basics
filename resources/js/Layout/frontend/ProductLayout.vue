@@ -1,14 +1,12 @@
 <script setup>
 import { ref } from 'vue'
 import FrontLayout from './FrontLayout.vue';
-
 const isMobileFilterOpen = ref(false)
 </script>
 
 
 <template>
     <div class="flex flex-col md:flex-row gap-6 min-h-[calc(100vh-12rem)]">
-        <!-- মোবাইলের জন্য ফিল্টার টগল বাটন -->
         <div
             class="md:hidden flex justify-between items-center bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
             <span class="font-semibold text-gray-700">Filters</span>

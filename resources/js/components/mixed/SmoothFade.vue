@@ -8,7 +8,7 @@
 <style scoped>
 .smooth-fade-enter-active,
 .smooth-fade-leave-active {
-  transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .smooth-fade-enter-from,

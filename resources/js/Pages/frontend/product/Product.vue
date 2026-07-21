@@ -15,6 +15,8 @@ const props = defineProps({
     <div class="p-4 text-gray-500">
         <h4 class="font-bold text-gray-700">{{ product.name }}</h4>
         <h5>Brand : {{ product.brand_name }}</h5>
+        <h5>Category : {{ product.category_name }}</h5>
+        <h5>Sub Category : {{ product.sub_category_name }}</h5>
         <p>Rating : {{ product.rating }}</p>
         <p class="text-sm text-gray-500 mt-1">
             Price :

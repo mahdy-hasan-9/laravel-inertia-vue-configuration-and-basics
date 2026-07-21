@@ -5,7 +5,6 @@ use App\Http\Controllers\Frontend\AuthenticationController;
 use App\Http\Controllers\Frontend\ProductController;
 use App\Http\Controllers\Frontend\ProfileController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 
 Route::middleware(['auth'])->group(function () {
