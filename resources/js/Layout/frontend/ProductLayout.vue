@@ -18,7 +18,7 @@ const isMobileFilterOpen = ref(false)
 
         <aside :class="[
             isMobileFilterOpen ? 'block' : 'hidden',
-            'md:block w-full md:w-64 flex-shrink-0 bg-white p-6 rounded-xl border border-gray-200 shadow-sm h-fit sticky top-20 transition-all duration-300'
+            'z-10 md:block w-full md:w-64 flex-shrink-0 bg-white p-6 rounded-xl border border-gray-200 shadow-sm h-fit sticky top-20 transition-all duration-300'
         ]">
             <div class="space-y-6">
                 <div>

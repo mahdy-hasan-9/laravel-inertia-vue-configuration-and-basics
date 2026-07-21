@@ -2,13 +2,14 @@
 
 use App\Http\Controllers\Frontend\AboutController;
 use App\Http\Controllers\Frontend\AuthenticationController;
+use App\Http\Controllers\Frontend\ConversationController;
 use App\Http\Controllers\Frontend\ProductController;
 use App\Http\Controllers\Frontend\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/about', AboutController::class)->name('about');
+    Route::get('/conversation', [ConversationController::class,'index'])->name('conversation.index');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profle', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('add/product', function () {

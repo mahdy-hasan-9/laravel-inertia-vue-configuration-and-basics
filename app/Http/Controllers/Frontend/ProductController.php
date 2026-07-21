@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\SubCategory;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
@@ -23,16 +24,16 @@ class ProductController extends Controller
             ->paginate(9)
             ->withQueryString();
 
+
         return Inertia("product/Products", [
             'message' => "This is products page",
             'products' => ProductResource::collection($products),
             'filters'  => $request->only(['search', 'vendor_id', 'brand_id', 'category_id', 'sub_category']),
-
             'vendors' => Vendor::where('is_active', 1)->select('id', 'name')->get(),
 
-            'brands' => fn() => $request->filled('vendor_id')
+            'brands' => Inertia::defer(fn() => $request->filled('vendor_id')
                 ? Brand::where('vendor_id', $request->vendor_id)->where('is_active', true)->select('id', 'name')->get()
-                : [],
+                : []),
 
             'categories' => fn() => $request->filled('brand_id')
                 ? Category::where('brand_id', $request->brand_id)->where('is_active', true)->select('id', 'name')->get()
