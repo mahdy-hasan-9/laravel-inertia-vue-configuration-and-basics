@@ -8,6 +8,11 @@ use App\Http\Controllers\Frontend\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 
+Route::get('/', function () {
+    return to_route('home');
+});
+
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/conversation', [ConversationController::class,'index'])->name('conversation.index');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');

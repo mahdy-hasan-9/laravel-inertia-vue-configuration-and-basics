@@ -53,7 +53,13 @@ class AuthenticationController extends Controller
 
         if (Auth::attempt($request->only('email', 'password'))) {
             $request->session()->regenerate();
-            return to_route('home');
+
+            $user = Auth::user();
+
+            if ($user->role === 'admin' || $user->role === 'super-admin') {
+                return redirect()->intended(route('admin.dashboard'));
+            }
+            return redirect()->intended(route('home'));
         }
 
         return back()->withErrors([
